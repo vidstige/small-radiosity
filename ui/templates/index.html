@@ -1,15 +1,26 @@
 <html>
     <head>
         <script>
-            function update(slider) {
-                var el = document.getElementById('target');
-                target.src = "/render/cornel-box/250x250?photons=" + slider.value;
+            function update() {
+                var photons = document.getElementById('photons').value;
+                var size = document.getElementById('size').value;
+
+                var target = document.getElementById('target');
+                target.src = "/render/cornel-box/" + size + "x" + size + "?photons=" + photons;
+                console.log(target.src);
             }
         </script>
         
     </head>
     <body>
-        <img id="target">
-        <input type="range" min="0" max="1000000" value="10000" onchange="update(this)">
+        <div>
+            <img id="target">
+        </div>
+        <div>
+            Photons <input id="photons" type="range" min="0" max="1000000" value="1000">
+            Size <input id="size" type="range" min="8" max="4096" value="256">
+            <button onclick="update()">Render</button>
+        </div>
+
     </body>
 </html>
