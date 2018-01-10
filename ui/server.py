@@ -23,7 +23,6 @@ def replace(input_file, output_file, replacements):
 
 @app.route('/render/cornel-box/<int:width>x<int:height>')
 def render(width, height):
-    print("{}x{}".format(width, height))
     # 1. Replace constants
     replacements = {
         'PHOTONS': request.args.get('photons', "50"),
