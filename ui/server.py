@@ -1,5 +1,5 @@
 import subprocess
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response, stream_with_context
 
 app = Flask(__name__, static_folder='')
 
@@ -40,8 +40,10 @@ def render(width, height):
     subprocess.check_call('./small_radiosity')
 
     # 4. convert to png
-    subprocess.check_call('convert cameraImage.ppm cameraImage.png'.split())
-    return app.send_static_file('cameraImage.png')
+    cmd = 'convert cameraImage.ppm png:-'.split()
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    return Response(stream_with_context(proc.stdout), mimetype="image/png")
+
 
 @app.route('/')
 def index():
