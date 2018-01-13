@@ -9,6 +9,13 @@
                 target.src = "/render/cornel-box/" + size + "x" + size + "?photons=" + photons;
                 console.log(target.src);
             }
+            function estimate() {
+                var photons = document.getElementById('photons').value;
+                var size = document.getElementById('size').value;
+
+                const url = "/estimate/cornel-box/" + size + "x" + size + "?photons=" + photons;
+                fetch(url).then(function (r) { return r.text(); }).then(console.log);
+            }
         </script>
         
     </head>
@@ -20,6 +27,7 @@
             Photons <input id="photons" type="range" min="0" max="10000" value="1000">
             Size <input id="size" type="range" min="8" max="1024" value="256">
             <button onclick="update()">Render</button>
+            <button onclick="estimate()">Estimate</button>
         </div>
 
     </body>

@@ -1,6 +1,8 @@
 import subprocess
 import time
 from flask import Flask, render_template, request, Response, stream_with_context
+import numpy as np
+import pickle
 
 app = Flask(__name__, static_folder='')
 
@@ -24,12 +26,25 @@ def replace(input_file, output_file, replacements):
 
 class Estimator(object):
     def __init__(self):
-        self.history = []
+        self.history = self._load()
+
+    def _load(self):
+        from os.path import isfile
+        if not isfile('history.pickle'):
+            return []
+        with open('history.pickle', 'rb') as f:
+            return pickle.load(f)
 
     def register(self, weights, actual):
         self.history.append((weights, actual))
+        with open('history.pickle', 'wb') as f:
+            pickle.dump(self.history, f)
+
     def estimate(self, weights):
-        return 1
+        A = np.array([w for w, _ in self.history])
+        b = np.array([t for _, t in self.history])
+        x, _, _, _ = np.linalg.lstsq(A, b, rcond=None)
+        return str(np.dot(x, np.array(weights)))
 
 
 estimator = Estimator()
@@ -37,7 +52,7 @@ estimator = Estimator()
 
 @app.route('/estimate/cornel-box/<int:width>x<int:height>')
 def estimate(width, height):
-    weights = [int(request.args.get('photons', "50")), int(width) * int(height)]
+    weights = [int(request.args.get('photons', "50")), int(width) * int(height), 1]
     return estimator.estimate(weights)
 
 
@@ -64,7 +79,7 @@ def render(width, height):
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
     stop = time.time()
 
-    weights = [int(request.args.get('photons', "50")), int(width) * int(height)]
+    weights = [int(request.args.get('photons', "50")), int(width) * int(height), 1]
     estimator.register(weights, stop - start)
 
     return Response(stream_with_context(proc.stdout), mimetype="image/png")
