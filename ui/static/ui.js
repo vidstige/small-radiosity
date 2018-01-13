@@ -27,6 +27,7 @@ var ViewModel = function() {
     this.size = ko.observable(256);
  
     this.imageUrl = ko.observable(null);
+    this.estimator = ko.observable(null);
 
     this.buildUrl = function(action) {
         var size = this.size();
@@ -39,8 +40,8 @@ var ViewModel = function() {
     };
     this.estimation = ko.pureComputed(function() {
         var w = [this.photons(), this.size()*this.size(), 1];
-        if (this.estimator) {
-            const e = dot(this.estimator, w);
+        if (this.estimator()) {
+            const e = dot(this.estimator(), w);
             return e.toFixed(1);
         }
         return null;
@@ -64,7 +65,7 @@ var ViewModel = function() {
     this.fetchEstimator = function() {
         fetch(this.buildUrl('estimator')).
             then(function (r) { return r.json(); }).
-            then(function (e) { self.estimator = e; });
+            then(this.estimator);
     };
 };
 
