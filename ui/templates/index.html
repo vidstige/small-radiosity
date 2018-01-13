@@ -1,18 +1,19 @@
 <html>
     <head>
-        <script src="static/ui.js">
-        </script>
-        
+        <script src="static/ui.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
     </head>
     <body>
         <div>
-                Photons <input id="photons" type="range" min="0" max="100" value="0">
-                Size <input id="size" type="range" min="8" max="1024" value="256">
-                <button onclick="update()">Render</button>
-                <button onclick="estimate()">Estimate</button>
+                Photons <input type="range" min="0" max="100" data-bind="value: photonsPosition, valueUpdate: 'input'">
+                <span data-bind="text: photons"></span>
+                Size <input type="range" min="8" max="1024" data-bind="value: size, valueUpdate: 'input'">
+                <span data-bind="text: size"></span>x<span data-bind="text: size"></span>
+                <button data-bind="click: render">Render</button>
+                <button data-bind="click: estimate">Estimate</button>
         </div>
         <div>
-            <img id="target">
+            <img data-bind="attr: {src: imageUrl}"></img>
         </div>
     </body>
 </html>
