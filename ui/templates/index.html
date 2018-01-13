@@ -1,20 +1,37 @@
 <html>
     <head>
         <script>
-            function update() {
-                var photons = document.getElementById('photons').value;
-                var size = document.getElementById('size').value;
+            // https://stackoverflow.com/questions/846221/logarithmic-slider
+            function exponentialSlider(id, a, b) {
+                // position will be between 0 and 100
+                const el = document.getElementById(id);
+                var minp = el.min;
+                var maxp = el.max;
 
+                // The result should be between a and b
+                var minv = Math.log(a);
+                var maxv = Math.log(b);
+
+                // calculate adjustment factor
+                var scale = (maxv - minv) / (maxp - minp);
+
+                return Math.exp(minv + scale * (el.value - minp));
+            }
+
+            function buildUrl() {
+                var photons = Math.round(exponentialSlider('photons', 1, 1000000));
+                var size = document.getElementById('size').value;
+                return "/render/cornel-box/" + size + "x" + size + "?photons=" + photons;
+            }
+
+            function update() {
                 var target = document.getElementById('target');
-                target.src = "/render/cornel-box/" + size + "x" + size + "?photons=" + photons;
+                target.src = buildUrl();
                 console.log(target.src);
             }
-            function estimate() {
-                var photons = document.getElementById('photons').value;
-                var size = document.getElementById('size').value;
 
-                const url = "/estimate/cornel-box/" + size + "x" + size + "?photons=" + photons;
-                fetch(url).then(function (r) { return r.text(); }).then(console.log);
+            function estimate() {
+                fetch(buildUrl()).then(function (r) { return r.text(); }).then(console.log);
             }
         </script>
         
@@ -24,7 +41,7 @@
             <img id="target">
         </div>
         <div>
-            Photons <input id="photons" type="range" min="0" max="10000" value="1000">
+            Photons <input id="photons" type="range" min="0" max="100" value="0">
             Size <input id="size" type="range" min="8" max="1024" value="256">
             <button onclick="update()">Render</button>
             <button onclick="estimate()">Estimate</button>
