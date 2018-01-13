@@ -26,7 +26,7 @@ var ViewModel = function() {
         if (this.estimator) {
             return dot(this.estimator, w);
         }
-        return "-";
+        return null;
     }, this);
     this.photons = ko.pureComputed(function() {
         // https://stackoverflow.com/questions/846221/logarithmic-slider
