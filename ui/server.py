@@ -37,6 +37,8 @@ class Estimator(object):
 
     def register(self, weights, actual):
         self.history.append((weights, actual))
+        # keep last 500 items
+        self.history = self.history[-500:]
         with open('history.pickle', 'wb') as f:
             pickle.dump(self.history, f)
 
