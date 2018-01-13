@@ -10,7 +10,7 @@
                 Size <input type="range" min="8" max="1024" data-bind="value: size, valueUpdate: 'input'">
                 <span data-bind="text: size"></span>x<span data-bind="text: size"></span>
                 <button data-bind="click: render">Render</button>
-                <button data-bind="click: estimate">Estimate</button>
+                <span data-bind="text: estimation"></span>
         </div>
         <div>
             <img data-bind="attr: {src: imageUrl}"></img>

@@ -1,6 +1,7 @@
 import subprocess
 import time
-from flask import Flask, render_template, request, Response, stream_with_context
+from flask import Flask, render_template, request, Response, \
+    stream_with_context, jsonify
 import numpy as np
 import pickle
 
@@ -42,20 +43,20 @@ class Estimator(object):
         with open('history.pickle', 'wb') as f:
             pickle.dump(self.history, f)
 
-    def estimate(self, weights):
+    def estimator(self):
         A = np.array([w for w, _ in self.history])
         b = np.array([t for _, t in self.history])
         x, _, _, _ = np.linalg.lstsq(A, b, rcond=None)
-        return str(np.dot(x, np.array(weights)))
+        return x
 
 
 estimator = Estimator()
 
 
-@app.route('/estimate/cornel-box/<int:width>x<int:height>')
+@app.route('/estimator/cornel-box/<int:width>x<int:height>')
 def estimate(width, height):
     weights = [int(request.args.get('photons', "50")), int(width) * int(height), 1]
-    return estimator.estimate(weights)
+    return jsonify(estimator.estimator().tolist())
 
 
 @app.route('/render/cornel-box/<int:width>x<int:height>')
