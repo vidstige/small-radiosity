@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, Response, stream_with_context
 import numpy as np
 import pickle
 
-app = Flask(__name__, static_folder='')
+app = Flask(__name__)
 
 def replace(input_file, output_file, replacements):
     def new_value(match):
