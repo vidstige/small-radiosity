@@ -6,6 +6,21 @@ function dot(a, b) {
     return d;
 }
 
+function progress(elementId, t) {
+    console.log(t);
+    var p = 0;
+    var elem = document.getElementById(elementId);
+    var intervalId = setInterval(frame, 10);
+    function frame() {
+        if (p >= 100) {
+            clearInterval(intervalId);
+        } else {
+            p += 1 / t;
+            elem.style.width = p.toFixed(2) + '%'; 
+        }
+    }
+}
+
 var ViewModel = function() {
     var self = this;
     this.photonsPosition = ko.observable(50);
@@ -19,6 +34,7 @@ var ViewModel = function() {
     };
     this.render = function() {
         this.imageUrl(null);
+        progress('bar', this.estimation());
         this.imageUrl(this.buildUrl('render'));
     };
     this.estimation = ko.pureComputed(function() {
