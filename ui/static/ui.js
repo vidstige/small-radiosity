@@ -18,6 +18,7 @@ var ViewModel = function() {
         return "/" + action + "/cornel-box/" + size + "x" + size + "?photons=" + this.photons();
     };
     this.render = function() {
+        this.imageUrl(null);
         this.imageUrl(this.buildUrl('render'));
     };
     this.estimation = ko.pureComputed(function() {
