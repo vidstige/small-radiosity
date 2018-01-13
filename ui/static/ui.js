@@ -24,7 +24,8 @@ var ViewModel = function() {
     this.estimation = ko.pureComputed(function() {
         var w = [this.photons(), this.size()*this.size(), 1];
         if (this.estimator) {
-            return dot(this.estimator, w);
+            const e = dot(this.estimator, w);
+            return e.toFixed(1);
         }
         return null;
     }, this);
