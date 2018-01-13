@@ -6,14 +6,13 @@
     </head>
     <body>
         <div>
-            <img id="target">
+                Photons <input id="photons" type="range" min="0" max="100" value="0">
+                Size <input id="size" type="range" min="8" max="1024" value="256">
+                <button onclick="update()">Render</button>
+                <button onclick="estimate()">Estimate</button>
         </div>
         <div>
-            Photons <input id="photons" type="range" min="0" max="100" value="0">
-            Size <input id="size" type="range" min="8" max="1024" value="256">
-            <button onclick="update()">Render</button>
-            <button onclick="estimate()">Estimate</button>
+            <img id="target">
         </div>
-
     </body>
 </html>
