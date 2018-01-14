@@ -22,7 +22,7 @@ function progress(elementId, t) {
 
 var ViewModel = function() {
     var self = this;
-    this.photonsPosition = ko.observable(50);
+    this.photonsPosition = ko.observable(40);
     this.size = ko.observable(256);
  
     this.imageUrl = ko.observable(null);
