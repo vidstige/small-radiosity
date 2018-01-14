@@ -7,7 +7,6 @@ function dot(a, b) {
 }
 
 function progress(elementId, t) {
-    console.log(t);
     var p = 0;
     var elem = document.getElementById(elementId);
     var intervalId = setInterval(frame, 10);
@@ -46,6 +45,26 @@ var ViewModel = function() {
         }
         return null;
     }, this);
+    this.formattedEstimation = ko.pureComputed(function() {
+        const levels = [
+            {s: 60, name: 'seconds'},
+            {s: 60, name: 'minutes'},
+            {s: 60, name: 'hours'},
+        ];
+        var x = this.estimation();
+        var o = x;
+        var parts = [];
+        for (var i = 0; i < levels.length; i++) {
+            var p = x % levels[i].s;
+            parts.push(Math.round(p) + " " + levels[i].name);
+            x = Math.floor(x / levels[i].s);
+            if (x <= 0) {
+                break;
+            }
+        }
+        parts.reverse();
+        return parts.join(', ');
+    }, this);
     this.photons = ko.pureComputed(function() {
         // https://stackoverflow.com/questions/846221/logarithmic-slider
         // position will be between 0 and 100
@@ -53,8 +72,8 @@ var ViewModel = function() {
         var maxp = 100;
 
         // The result should be between 100 and 1000000
-        var minv = Math.log(100);
-        var maxv = Math.log(1000000);
+        var minv = Math.log(1000);
+        var maxv = Math.log(100000000);
 
         // calculate adjustment factor
         var scale = (maxv - minv) / (maxp - minp);
