@@ -7,14 +7,16 @@ function dot(a, b) {
 }
 
 function progress(elementId, t) {
-    var p = 0;
+    var start = new Date().getTime();
     var elem = document.getElementById(elementId);
     var intervalId = setInterval(frame, 10);
     function frame() {
-        if (p >= 100) {
+        const dt = (new Date().getTime() - start) / 1000;
+        if (dt > t) {
+            elem.style.width = "100%";
             clearInterval(intervalId);
         } else {
-            p += 1 / t;
+            const p = 100 * dt / t;
             elem.style.width = p.toFixed(2) + '%'; 
         }
     }
@@ -40,8 +42,7 @@ var ViewModel = function() {
     this.estimation = ko.pureComputed(function() {
         var w = [this.photons(), this.size()*this.size(), 1];
         if (this.estimator()) {
-            const e = dot(this.estimator(), w);
-            return e.toFixed(1);
+            return dot(this.estimator(), w);
         }
         return null;
     }, this);
