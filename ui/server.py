@@ -58,6 +58,11 @@ def estimate(width, height):
     weights = [int(request.args.get('photons', "50")), int(width) * int(height), 1]
     return jsonify(estimator.estimator().tolist())
 
+import string
+import random
+def random_string(n=8, alphabet=string.ascii_lowercase + string.digits):
+    return ''.join(random.choice(alphabet) for _ in range(n))
+
 
 @app.route('/render/cornel-box/<int:width>x<int:height>')
 def render(width, height):
@@ -69,10 +74,11 @@ def render(width, height):
         'WIDTH': float(width),
         'HEIGHT': float(height),
     }
-    replace('../main.cpp', 'main.cpp', options)
+    filename = '{}.cpp'.format(random_string())
+    replace('main.cpp', filename, options)
 
     # 2. compile
-    subprocess.check_call(['g++', '-std=c++11', 'main.cpp', '-o', 'small_radiosity'])
+    subprocess.check_call(['g++', '-std=c++11', filename, '-o', 'small_radiosity'])
 
     # 3. run
     subprocess.check_call('./small_radiosity')
